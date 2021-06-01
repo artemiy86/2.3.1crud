@@ -12,8 +12,12 @@ import web.service.UserServiceImpl;
 @Controller
 public class UserController {
 
-    @Autowired
     private UserServiceImpl service;
+
+    @Autowired
+    public UserController(UserServiceImpl service) {
+        this.service = service;
+    }
 
     @RequestMapping("/")
     public String getRoot(ModelMap model){
@@ -50,12 +54,7 @@ public class UserController {
                            @RequestParam(value = "surname") String surname,
                            @RequestParam(value = "age") int age,
                            @RequestParam(value = "email") String email){
-        User user = service.getUserById(id);
-        user.setName(name);
-        user.setSurname(surname);
-        user.setAge(age);
-        user.setEmail(email);
-        service.editUser(user);
+        service.editUser(id, name, surname, age, email);
         return "redirect:/";
     }
 

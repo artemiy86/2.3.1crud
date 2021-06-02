@@ -3,6 +3,7 @@ package web.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,24 +11,25 @@ import web.model.User;
 import web.service.UserServiceImpl;
 
 @Controller
+@RequestMapping
 public class UserController {
 
     @Autowired
     private UserServiceImpl service;
 
-    @RequestMapping("/")
+    @GetMapping("/")
     public String getRoot(ModelMap model){
         model.addAttribute("users",service.getAllUsers());
         return "index";
     }
 
-    @RequestMapping("/delete")
+    @GetMapping("/delete")
     public String deleteUser(@RequestParam(value = "id") long id){
         service.deleteUser(id);
         return "redirect:/";
     }
 
-    @RequestMapping("/add")
+    @GetMapping("/add")
     public String addUserForm(ModelMap model){
         User user = new User();
         model.addAttribute("action","add");
@@ -35,7 +37,7 @@ public class UserController {
         return "form";
     }
 
-    @RequestMapping("/edit")
+    @GetMapping("/edit")
     public String editUserForm(@RequestParam(value = "id") long id,
                            ModelMap model){
         model.addAttribute("action","edit");
@@ -50,12 +52,7 @@ public class UserController {
                            @RequestParam(value = "surname") String surname,
                            @RequestParam(value = "age") int age,
                            @RequestParam(value = "email") String email){
-        User user = service.getUserById(id);
-        user.setName(name);
-        user.setSurname(surname);
-        user.setAge(age);
-        user.setEmail(email);
-        service.editUser(user);
+        service.editUser(id, name, surname, age, email);
         return "redirect:/";
     }
 
@@ -64,12 +61,7 @@ public class UserController {
                              @RequestParam(value = "surname") String surname,
                              @RequestParam(value = "age") int age,
                              @RequestParam(value = "email") String email){
-        User user = new User();
-        user.setName(name);
-        user.setSurname(surname);
-        user.setAge(age);
-        user.setEmail(email);
-        service.createUser(user);
+        service.createUser(name, surname, age, email);
         return "redirect:/";
     }
 }

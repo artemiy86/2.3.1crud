@@ -23,12 +23,22 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void createUser(User user) {
+    public void createUser(String name, String surname, int age, String email) {
+        User user = new User();
+        user.setName(name);
+        user.setSurname(surname);
+        user.setAge(age);
+        user.setEmail(email);
         userDao.createUser(user);
     }
 
     @Override
-    public void editUser(User user) {
+    public void editUser(long id, String name, String surname, int age, String email) {
+        User user = getUserById(id);
+        user.setName(name);
+        user.setSurname(surname);
+        user.setAge(age);
+        user.setEmail(email);
         userDao.editUser(user);
     }
 
